@@ -15,6 +15,9 @@ const { auth } = require('./middleware/auth')
 app.use(bodyParser.json())
 app.use(cookieParser())
 
+//pour que heroku sache.
+app.use(express.static('client/build'))
+
 
 
 mongoose.connect(config.DATABASE)
@@ -324,40 +327,15 @@ app.delete('/api/delete_livre', (req, res) => {
 
   });
 
-
-
+//pour toujours pointer index,html en tout temps 
+if(process.env.NODE_ENV === 'production'){
+  const path = require('path')
+  app.get('/*',  (req,res) => {
+    res.sendfile(path.resolve(__dirname, '../client', 'build', 'index.html')) //fera le path default
+  })
+}
 
 
 
 const port = process.env.PORT || 3001  //3000 si localhost
 app.listen(port, () =>  console.log(`ca roule sur le ${port}`));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ///////////////////////////////////////////////////////////////////////////////////////////////
-//                             //   React //
-// ///////////////////////////////////////////////////////////////////////////////////////////////
-// app.get('/api/users', (req,res) => {
-// res.json([
-//   {
-//     id: 1,
-//     username: "AXE-Z"
-//   },
-//   {
-//     id: 2,
-//     username: "Destro"
-//   }
-// ])
-// })
